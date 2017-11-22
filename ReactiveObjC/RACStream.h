@@ -134,11 +134,15 @@ typedef RACStream * _Nullable (^RACStreamBindBlock)(ValueType _Nullable value, B
 /// receiver.
 - (__kindof RACStream *)flatten;
 
+///QUAN
 /// Maps `block` across the values in the receiver.
+///在接收者的值中映射`block`。
 ///
 /// This corresponds to the `Select` method in Rx.
+///这对应于Rx中的“选择”方法。
 ///
 /// Returns a new stream with the mapped values.
+///用映射的值返回一个新的流。
 - (__kindof RACStream *)map:(id _Nullable (^)(ValueType _Nullable value))block;
 
 /// Replaces each value in the receiver with the given object.

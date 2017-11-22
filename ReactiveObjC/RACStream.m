@@ -89,6 +89,7 @@
 	}] setNameWithFormat:@"[%@] -flatten", self.name];
 }
 
+///QUAN
 - (__kindof RACStream *)map:(id (^)(id value))block {
 	NSCParameterAssert(block != nil);
 
@@ -190,14 +191,19 @@
 	}] setNameWithFormat:@"[%@] -take: %lu", self.name, (unsigned long)count];
 }
 
+///QUAN
 + (__kindof RACStream *)join:(id<NSFastEnumeration>)streams block:(RACStream * (^)(id, id))block {
 	RACStream *current = nil;
 
 	// Creates streams of successively larger tuples by combining the input
+	///通过组合输入创建连续更大的元组流
 	// streams one-by-one.
+	///一个接一个流
 	for (RACStream *stream in streams) {
 		// For the first stream, just wrap its values in a RACTuple. That way,
+		///对于第一个流，只需将其值包装在RACTuple中。那样，
 		// if only one stream is given, the result is still a stream of tuples.
+		///如果只给出一个流，结果仍然是一个元组流。
 		if (current == nil) {
 			current = [stream map:^(id x) {
 				return RACTuplePack(x);
@@ -213,10 +219,13 @@
 
 	return [current map:^(RACTuple *xs) {
 		// Right now, each value is contained in its own tuple, sorta like:
+		///现在，每个值都包含在它自己的元组中，类似于：
 		//
 		// (((1), 2), 3)
+		///（（（1），2），3）
 		//
 		// We need to unwrap all the layers and create a tuple out of the result.
+		///我们需要展开所有的图层，并在结果中创建一个元组。
 		NSMutableArray *values = [[NSMutableArray alloc] init];
 
 		while (xs != nil) {

@@ -40,9 +40,11 @@
 
 #pragma mark Lifecycle
 
+///QUAN
 + (RACSignal *)return:(id)value {
 #ifndef DEBUG
 	// In release builds, use singletons for two very common cases.
+	///在发布版本中，对于两个非常常见的情况使用单例。
 	if (value == RACUnit.defaultUnit) {
 		static RACReturnSignal *unitSingleton;
 		static dispatch_once_t unitPred;
@@ -78,6 +80,7 @@
 
 #pragma mark Subscription
 
+///QUAN
 - (RACDisposable *)subscribe:(id<RACSubscriber>)subscriber {
 	NSCParameterAssert(subscriber != nil);
 

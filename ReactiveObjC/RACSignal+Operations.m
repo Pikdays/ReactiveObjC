@@ -450,6 +450,7 @@ static RACDisposable *subscribeForever (RACSignal *signal, void (^next)(id), voi
 	}] setNameWithFormat:@"[%@] -combineLatestWith: %@", self.name, signal];
 }
 
+//QUAN 拼接
 + (RACSignal *)combineLatest:(id<NSFastEnumeration>)signals {
 	return [[self join:signals block:^(RACSignal *left, RACSignal *right) {
 		return [left combineLatestWith:right];

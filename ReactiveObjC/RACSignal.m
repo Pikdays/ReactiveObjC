@@ -27,6 +27,7 @@
 
 #pragma mark Lifecycle
 
+///QUAN
 + (RACSignal *)createSignal:(RACDisposable * (^)(id<RACSubscriber> subscriber))didSubscribe {
 	return [RACDynamicSignal createSignal:didSubscribe];
 }

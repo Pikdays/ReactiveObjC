@@ -21,12 +21,16 @@ NS_ASSUME_NONNULL_BEGIN
 /// to be overridden.
 @interface RACStream<__covariant ValueType> : NSObject
 
+///QUAN
 /// Returns an empty stream.
+///返回一个空的流。
 + (__kindof RACStream<ValueType> *)empty;
 
+///QUAN
 /// Lifts `value` into the stream monad.
-///
+///将`value`提升到流monad中。
 /// Returns a stream containing only the given value.
+///返回只包含给定值的流。
 + (__kindof RACStream<ValueType> *)return:(nullable ValueType)value;
 
 /// A block which accepts a value from a RACStream and returns a new instance
@@ -37,16 +41,24 @@ NS_ASSUME_NONNULL_BEGIN
 typedef RACStream * _Nullable (^RACStreamBindBlock)(ValueType _Nullable value, BOOL *stop);
 
 /// Lazily binds a block to the values in the receiver.
+///懒惰地将一个块绑定到接收者的值。
 ///
 /// This should only be used if you need to terminate the bind early, or close
+///只有在需要提前终止绑定或关闭时才能使用
 /// over some state. -flattenMap: is more appropriate for all other cases.
+///在某个状态 -flattenMap：更适合所有其他情况。
 ///
 /// block - A block returning a RACStreamBindBlock. This block will be invoked
+/// block - 一个返回RACStreamBindBlock的块。 这个块将被调用
 ///         each time the bound stream is re-evaluated. This block must not be
+///每次绑定流被重新评估。 这个块不可以
 ///         nil or return nil.
+///无或返回零。
 ///
 /// Returns a new stream which represents the combined result of all lazy
+///返回一个代表所有懒惰组合结果的新流
 /// applications of `block`.
+///块的应用程序
 - (__kindof RACStream *)bind:(RACStreamBindBlock (^)(void))block;
 
 /// Appends the values of `stream` to the values in the receiver.
@@ -78,7 +90,9 @@ typedef RACStream * _Nullable (^RACStreamBindBlock)(ValueType _Nullable value, B
 /// Subclasses do not need to override the methods here.
 @interface RACStream ()
 
+///QUAN
 /// The name of the stream. This is for debugging/human purposes only.
+///流的名称。 这仅用于调试/人为目的。
 @property (copy) NSString *name;
 
 /// Sets the name of the receiver to the given format string.
@@ -127,11 +141,15 @@ typedef RACStream * _Nullable (^RACStreamBindBlock)(ValueType _Nullable value, B
 - (__kindof RACStream *)flattenMap:(__kindof RACStream * _Nullable (^)(ValueType _Nullable value))block;
 
 /// Flattens a stream of streams.
+///展开一串流。
 ///
 /// This corresponds to the `Merge` method in Rx.
+///这对应于Rx中的“合并”方法。
 ///
 /// Returns a stream consisting of the combined streams obtained from the
+///返回由从中获得的组合流组成的流
 /// receiver.
+///接收器。
 - (__kindof RACStream *)flatten;
 
 ///QUAN
@@ -192,17 +210,26 @@ typedef RACStream * _Nullable (^RACStreamBindBlock)(ValueType _Nullable value, B
 /// equivalent to the receiver is returned.
 - (__kindof RACStream<ValueType> *)take:(NSUInteger)count;
 
+///QUAN
 /// Zips the values in the given streams to create RACTuples.
+///将给定流中的值压缩以创建RACTuples。
 ///
 /// The first value of each stream will be combined, then the second value, and
+///每个流的第一个值将被合并，然后是第二个值
 /// so forth, until at least one of the streams is exhausted.
+///等等，直到至少有一个流被耗尽。
 ///
 /// streams - The streams to combine. These must all be instances of the same
+/// streams - 要组合的流。 这些都必须是相同的情况
 ///           concrete class implementing the protocol. If this collection is
+///具体类实现协议。 如果这个集合是
 ///           empty, the returned stream will be empty.
+///空，返回的流将是空的。
 ///
 /// Returns a new stream containing RACTuples of the zipped values from the
+///返回包含压缩值的RACTuples的新流
 /// streams.
+///流。
 + (__kindof RACStream<ValueType> *)zip:(id<NSFastEnumeration>)streams;
 
 /// Zips streams using +zip:, then reduces the resulting tuples into a single

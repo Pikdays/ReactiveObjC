@@ -20,35 +20,58 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface RACSignal<__covariant ValueType> : RACStream
-
+///QUAN
 /// Creates a new signal. This is the preferred way to create a new signal
+///创建一个新的信号。这是创建新信号的首选方式
 /// operation or behavior.
+///操作或行为。
 ///
 /// Events can be sent to new subscribers immediately in the `didSubscribe`
+///事件可以立即在`didSubscribe`中发送给新的订阅者
 /// block, but the subscriber will not be able to dispose of the signal until
+///块，但用户将无法处理该信号，直到
 /// a RACDisposable is returned from `didSubscribe`. In the case of infinite
+///从`didSubscribe`返回一个RACDisposable。在无限的情况下
 /// signals, this won't _ever_ happen if events are sent immediately.
+///信号，如果事件立即发送，这将不会发生。
 ///
 /// To ensure that the signal is disposable, events can be scheduled on the
+///为确保信号是一次性的，事件可以安排在
 /// +[RACScheduler currentScheduler] (so that they're deferred, not sent
+/// + [RACScheduler currentScheduler]（使它们被延迟，不发送
 /// immediately), or they can be sent in the background. The RACDisposable
+///立即），或者他们可以在后台发送。 RACDisposable
 /// returned by the `didSubscribe` block should cancel any such scheduling or
+///由`didSubscribe`块返回的///应该取消任何这样的调度
 /// asynchronous work.
+///异步工作。
 ///
 /// didSubscribe - Called when the signal is subscribed to. The new subscriber is
+/// didSubscribe - 当信号订阅时调用。新用户是
 ///                passed in. You can then manually control the <RACSubscriber> by
+///传入。然后可以通过手动控制<RACSubscriber>
 ///                sending it -sendNext:, -sendError:, and -sendCompleted,
+///发送它-sendNext :, -sendError：和-sendCompleted，
 ///                as defined by the operation you're implementing. This block
+///按您正在执行的操作定义。这块
 ///                should return a RACDisposable which cancels any ongoing work
+///应该返回一个RACDisposable，取消正在进行的任何工作
 ///                triggered by the subscription, and cleans up any resources or
+///由订阅触发，并清理任何资源或
 ///                disposables created as part of it. When the disposable is
+///一次性创建的一部分。当一次性的是
 ///                disposed of, the signal must not send any more events to the
+///处置，信号不能发送任何更多的事件
 ///                `subscriber`. If no cleanup is necessary, return nil.
+///`订户`。如果不需要清理，则返回nil。
 ///
 /// **Note:** The `didSubscribe` block is called every time a new subscriber
+///订阅。块内的任何副作用都将因此每个执行一次
 /// subscribes. Any side effects within the block will thus execute once for each
+///订阅，不一定在一个线程，甚至可能
 /// subscription, not necessarily on one thread, and possibly even
 /// simultaneously!
+/// 时间
 + (RACSignal<ValueType> *)createSignal:(RACDisposable * _Nullable (^)(id<RACSubscriber> subscriber))didSubscribe RAC_WARN_UNUSED_RESULT;
 
 /// Returns a signal that immediately sends the given error.
@@ -379,21 +402,34 @@ typedef RACSignal * _Nullable (^RACSignalBindBlock)(ValueType _Nullable value, B
 @interface RACSignal<__covariant ValueType> (Subscription)
 
 /// Subscribes `subscriber` to changes on the receiver. The receiver defines which
+///订阅订阅者在接收者上改变。 接收器定义了哪个
 /// events it actually sends and in what situations the events are sent.
+///它实际发送的事件以及发送事件的情况。
 ///
 /// Subscription will always happen on a valid RACScheduler. If the
+///订阅将始终发生在有效的RACScheduler上。 如果
 /// +[RACScheduler currentScheduler] cannot be determined at the time of
+/// + [RACScheduler currentScheduler]不能确定的时候
 /// subscription (e.g., because the calling code is running on a GCD queue or
+///订阅（例如，因为调用代码正在GCD队列上运行）
 /// NSOperationQueue), subscription will occur on a private background scheduler.
+/// NSOperationQueue），订阅将发生在私人后台调度程序上。
 /// On the main thread, subscriptions will always occur immediately, with a
+///在主线程上，订阅将总是立即发生，使用a
 /// +[RACScheduler currentScheduler] of +[RACScheduler mainThreadScheduler].
+/// [RACScheduler mainThreadScheduler]的[RACScheduler currentScheduler]。
 ///
 /// This method must be overridden by any subclasses.
+///这个方法必须被任何子类覆盖。
 ///
 /// Returns nil or a disposable. You can call -[RACDisposable dispose] if you
+///返回零或一次性。 你可以打电话给 - [RACDisposable处置]，如果你
 /// need to end your subscription before it would "naturally" end, either by
+///需要在“自然”结束之前结束订阅，或者通过
 /// completing or erroring. Once the disposable has been disposed, the subscriber
+///完成或错误。 一旦一次性处置完毕，用户
 /// won't receive any more events from the subscription.
+///将不会收到来自订阅的更多事件。
 - (RACDisposable *)subscribe:(id<RACSubscriber>)subscriber;
 
 /// Convenience method to subscribe to the `next` event.

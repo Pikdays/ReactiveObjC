@@ -165,17 +165,26 @@ extern const NSInteger RACSignalErrorNoMatchingCase;
 /// `error` events, and completes when both input signals complete.
 - (RACSignal<RACTwoTuple<ValueType, id> *> *)combineLatestWith:(RACSignal *)signal RAC_WARN_UNUSED_RESULT;
 
+///QUAN
 /// Combines the latest values from the given signals into RACTuples, once all
+///将给定信号的最新值合并到RACTuples中
 /// the signals have sent at least one `next`.
+///信号已经发送了至少一个“下一个”。
 ///
 /// Any additional `next`s will result in a new RACTuple with the latest values
+///任何额外的`next`都将导致一个新的RACTuple带有最新的值
 /// from all signals.
+///从所有信号。
 ///
 /// signals - The signals to combine. If this collection is empty, the returned
+///信号 - 要组合的信号。 如果这个集合是空的，则返回
 ///           signal will immediately complete upon subscription.
+///信号将在订阅后立即完成。
 ///
 /// Returns a signal which sends RACTuples of the combined values, forwards any
+///返回发送组合值的RACTuples的信号，转发任何信号
 /// `error` events, and completes when all input signals complete.
+///错误事件，并在所有输入信号完成时完成。
 + (RACSignal<RACTuple *> *)combineLatest:(id<NSFastEnumeration>)signals RAC_WARN_UNUSED_RESULT;
 
 /// Combines signals using +combineLatest:, then reduces the resulting tuples

@@ -10,6 +10,8 @@
 #import "NSObject+RACDescription.h"
 #import "RACBlockTrampoline.h"
 #import "RACTuple.h"
+#import "RACSequence.h"
+#import "RACUnarySequence.h"
 
 @implementation RACStream
 
@@ -24,16 +26,19 @@
 
 #pragma mark Abstract methods
 
+///QUAN
 + (__kindof RACStream *)empty {
 	NSString *reason = [NSString stringWithFormat:@"%@ must be overridden by subclasses", NSStringFromSelector(_cmd)];
 	@throw [NSException exceptionWithName:NSInternalInconsistencyException reason:reason userInfo:nil];
 }
 
+///QUAN
 - (__kindof RACStream *)bind:(RACStreamBindBlock (^)(void))block {
 	NSString *reason = [NSString stringWithFormat:@"%@ must be overridden by subclasses", NSStringFromSelector(_cmd)];
 	@throw [NSException exceptionWithName:NSInternalInconsistencyException reason:reason userInfo:nil];
 }
 
+///QUAN
 + (__kindof RACStream *)return:(id)value {
 	NSString *reason = [NSString stringWithFormat:@"%@ must be overridden by subclasses", NSStringFromSelector(_cmd)];
 	@throw [NSException exceptionWithName:NSInternalInconsistencyException reason:reason userInfo:nil];
@@ -70,23 +75,24 @@
 
 @implementation RACStream (Operations)
 
+///QUAN
 - (__kindof RACStream *)flattenMap:(__kindof RACStream * (^)(id value))block {
 	Class class = self.class;
 
-	return [[self bind:^{
-		return ^(id value, BOOL *stop) {
-			id stream = block(value) ?: [class empty];
-			NSCAssert([stream isKindOfClass:RACStream.class], @"Value returned from -flattenMap: is not a stream: %@", stream);
-
-			return stream;
-		};
-	}] setNameWithFormat:@"[%@] -flattenMap:", self.name];
+    return [[self bind:^RACStreamBindBlock {
+        return ^RACStream *(id value, BOOL *stop) {
+            id stream = block(value) ?: [class empty];
+            NSCAssert([stream isKindOfClass:RACStream.class], @"Value returned from -flattenMap: is not a stream: %@", stream);
+            return stream;
+        };
+    }]setNameWithFormat:@"[%@] -flattenMap:", self.name];
 }
 
+///QUAN
 - (__kindof RACStream *)flatten {
-	return [[self flattenMap:^(id value) {
-		return value;
-	}] setNameWithFormat:@"[%@] -flatten", self.name];
+    return [[self flattenMap:^RACStream *(id value) {
+        return value;
+    }] setNameWithFormat:@"[%@] -flatten", self.name];
 }
 
 ///QUAN
@@ -94,10 +100,10 @@
 	NSCParameterAssert(block != nil);
 
 	Class class = self.class;
-	
-	return [[self flattenMap:^(id value) {
-		return [class return:block(value)];
-	}] setNameWithFormat:@"[%@] -map:", self.name];
+
+    return [[self flattenMap:^RACStream *(id value) {
+        return [class return:block(value)];
+    }] setNameWithFormat:@"[%@] -map:", self.name];
 }
 
 - (__kindof RACStream *)mapReplace:(id)object {
@@ -237,6 +243,7 @@
 	}];
 }
 
+///QUAN 拼接
 + (__kindof RACStream *)zip:(id<NSFastEnumeration>)streams {
 	return [[self join:streams block:^(RACStream *left, RACStream *right) {
 		return [left zipWith:right];
